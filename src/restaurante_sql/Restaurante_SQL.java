@@ -5,6 +5,11 @@
  */
 package restaurante_sql;
 
+import restaurante_sql.Conta.Abrir_Conta;
+import restaurante_sql.Conta.Fechamento_Conta;
+import restaurante_sql.Conta.Fechar_Conta;
+import restaurante_sql.Produto.Cadastrar_Produto;
+
 /**
  *
  * @author Hoope
@@ -16,6 +21,7 @@ public class Restaurante_SQL {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        new Cadastrar_Produto().setVisible(true);
     }
     
 }
