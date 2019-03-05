@@ -98,6 +98,7 @@ public class Produto_Conta extends javax.swing.JFrame {
         JcbProduto = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
         JcbQuantidade = new javax.swing.JComboBox<>();
+        jButton17 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -160,17 +161,30 @@ public class Produto_Conta extends javax.swing.JFrame {
         JcbQuantidade.setFont(new java.awt.Font("Tw Cen MT Condensed", 0, 18)); // NOI18N
         JcbQuantidade.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5" }));
 
+        jButton17.setBackground(new java.awt.Color(255, 255, 255));
+        jButton17.setFont(new java.awt.Font("Tw Cen MT Condensed", 0, 18)); // NOI18N
+        jButton17.setForeground(new java.awt.Color(255, 102, 0));
+        jButton17.setText("Tela Inicial");
+        jButton17.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton17ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jButton17)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel2)
                         .addGap(233, 233, 233))))
             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -193,7 +207,9 @@ public class Produto_Conta extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel2)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
+                    .addComponent(jButton17))
                 .addGap(61, 61, 61)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
@@ -295,10 +311,29 @@ public class Produto_Conta extends javax.swing.JFrame {
                 p.setTotal(""+total);
                 
                 if(sql.Cadastro(p)){
+                    Produto pro = new Produto();
+                    int id = p.getIdproduto();
+                    pro.setId(id);
                     
-                        JOptionPane.showMessageDialog(null,"Pedido adicionado" ,"Restaurante",JOptionPane.INFORMATION_MESSAGE);
+                    ProdutoDAO sqlpro = new ProdutoDAO(con);
+                    List<Produto> lista = new ArrayList<>();
+                    lista = sqlpro.PreAlterar(pro);
+                     int estoque = 0;
+                    // System.out.println(""+lista);
+                    for(Produto tab : lista){
+                        estoque = Integer.parseInt(tab.getEstoque())- Integer.parseInt((String) JcbQuantidade.getSelectedItem());
+                       //System.out.println("asasd"+tab.getEstoque());
+                        
+                    }
+                    pro.setEstoque(""+estoque);
+                    //System.out.println(pro.getEstoque());
+                    
+                    if(sqlpro.AlterarEstoque(pro)){
+                        JOptionPane.showMessageDialog(null,"Pedido adicionado" ,"Restaurante",JOptionPane.INFORMATION_MESSAGE);;;
                         new TelaInicial_Garcom(this.u).setVisible(true);
                         dispose();
+                    }
+                 
                        
                 }       
             }
@@ -314,6 +349,12 @@ public class Produto_Conta extends javax.swing.JFrame {
         
         Conexao.FecharConexao(con);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton17ActionPerformed
+        // TODO add your handling code here:
+        new TelaInicial_Garcom(u).setVisible(true);
+        dispose();
+    }//GEN-LAST:event_jButton17ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -355,6 +396,7 @@ public class Produto_Conta extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> JcbProduto;
     private javax.swing.JComboBox<String> JcbQuantidade;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton17;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;

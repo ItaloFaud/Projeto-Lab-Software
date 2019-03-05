@@ -113,6 +113,7 @@ public class Abrir_Conta extends javax.swing.JFrame {
         JcbMesa = new javax.swing.JComboBox<>();
         JcbProduto = new javax.swing.JComboBox<>();
         JcbQuantidade = new javax.swing.JComboBox<>();
+        jButton17 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -183,6 +184,16 @@ public class Abrir_Conta extends javax.swing.JFrame {
         JcbQuantidade.setFont(new java.awt.Font("Tw Cen MT Condensed", 0, 18)); // NOI18N
         JcbQuantidade.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5" }));
 
+        jButton17.setBackground(new java.awt.Color(255, 255, 255));
+        jButton17.setFont(new java.awt.Font("Tw Cen MT Condensed", 0, 18)); // NOI18N
+        jButton17.setForeground(new java.awt.Color(255, 102, 0));
+        jButton17.setText("Tela Inicial");
+        jButton17.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton17ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -210,7 +221,9 @@ public class Abrir_Conta extends javax.swing.JFrame {
                         .addGap(282, 282, 282)
                         .addComponent(jButton1))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(273, 273, 273)
+                        .addContainerGap()
+                        .addComponent(jButton17)
+                        .addGap(172, 172, 172)
                         .addComponent(jLabel2)))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
@@ -218,7 +231,9 @@ public class Abrir_Conta extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel2)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
+                    .addComponent(jButton17))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
@@ -288,14 +303,35 @@ public class Abrir_Conta extends javax.swing.JFrame {
                 
                 if(sql.Cadastro(p)){
                     
-                    MesaDAO mesaa = new MesaDAO(con);
-                    Mesa m = new Mesa();
-                    m.setId(Integer.parseInt(mesa));
+                    Produto pro = new Produto();
+                    int id = p.getIdproduto();
+                    pro.setId(id);
                     
-                    if(mesaa.Alterar(m)){
-                        JOptionPane.showMessageDialog(null,"Conta Aberta!" ,"Restaurante",JOptionPane.INFORMATION_MESSAGE);
-                        new TelaInicial_Garcom(this.u).setVisible(true);
-                        dispose();
+                    ProdutoDAO sqlpro = new ProdutoDAO(con);
+                    List<Produto> lista = new ArrayList<>();
+                    lista = sqlpro.PreAlterar(pro);
+                     int estoque = 0;
+                    // System.out.println(""+lista);
+                    for(Produto tab : lista){
+                        estoque = Integer.parseInt(tab.getEstoque())- Integer.parseInt((String) JcbQuantidade.getSelectedItem());
+                       //System.out.println("asasd"+tab.getEstoque());
+                        
+                    }
+                    pro.setEstoque(""+estoque);
+                    //System.out.println(pro.getEstoque());
+                    
+                    if(sqlpro.AlterarEstoque(pro)){
+                        MesaDAO mesaa = new MesaDAO(con);
+                        Mesa m = new Mesa();
+                        m.setId(Integer.parseInt(mesa));
+
+                        if(mesaa.Alterar(m)){
+                            JOptionPane.showMessageDialog(null,"Conta Aberta!" ,"Restaurante",JOptionPane.INFORMATION_MESSAGE);
+                            new TelaInicial_Garcom(this.u).setVisible(true);
+                            dispose();
+
+                        }
+                    
                     }   
                 }       
             }
@@ -360,6 +396,12 @@ public class Abrir_Conta extends javax.swing.JFrame {
         
     }//GEN-LAST:event_JcbProdutoActionPerformed
 
+    private void jButton17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton17ActionPerformed
+        // TODO add your handling code here:
+        new TelaInicial_Garcom(u).setVisible(true);
+        dispose();
+    }//GEN-LAST:event_jButton17ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -400,6 +442,17 @@ public class Abrir_Conta extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> JcbProduto;
     private javax.swing.JComboBox<String> JcbQuantidade;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton10;
+    private javax.swing.JButton jButton11;
+    private javax.swing.JButton jButton12;
+    private javax.swing.JButton jButton13;
+    private javax.swing.JButton jButton14;
+    private javax.swing.JButton jButton15;
+    private javax.swing.JButton jButton16;
+    private javax.swing.JButton jButton17;
+    private javax.swing.JButton jButton7;
+    private javax.swing.JButton jButton8;
+    private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

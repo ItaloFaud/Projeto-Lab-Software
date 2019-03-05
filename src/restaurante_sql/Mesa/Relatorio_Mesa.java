@@ -51,7 +51,7 @@ public class Relatorio_Mesa extends javax.swing.JFrame {
         Data();
         AtualizaTableData();
     }
-    
+    float totall = 0;
     List<Conta> c = new ArrayList<>();
     
     public void Data(){
@@ -118,6 +118,7 @@ public class Relatorio_Mesa extends javax.swing.JFrame {
     }
     
     public void AtualizaTableAberta(){
+        this.totall = 0;
         Connection con = Conexao.AbrirConexao();
         MesaDAO sql2 = new MesaDAO(con);
         List<Mesa> lista2 = new ArrayList<>();
@@ -155,6 +156,7 @@ public class Relatorio_Mesa extends javax.swing.JFrame {
              nf.setMaximumFractionDigits(2);
              nf.setMinimumFractionDigits(2);
             Tabela.setValueAt(nf.format(total), i, 1);
+            this.totall += total;
             total = 0;
             i++;
             
@@ -173,6 +175,7 @@ public class Relatorio_Mesa extends javax.swing.JFrame {
     }
     
     public void AtualizaTableData(){
+        this.totall = 0;
         Connection con = Conexao.AbrirConexao();
         MesaDAO sql2 = new MesaDAO(con);
         List<Mesa> lista2 = new ArrayList<>();
@@ -198,11 +201,12 @@ public class Relatorio_Mesa extends javax.swing.JFrame {
             for(Conta tab2:lista){
                 String[] data_con = tab2.getData().split("/");
                
-               if(Integer.parseInt(data_Ini[2])<=Integer.parseInt(data_con[2]) && Integer.parseInt(data_con[2])<=Integer.parseInt(data_Venc[2]) && Integer.parseInt(data_Ini[1])<=Integer.parseInt(data_con[1]) && Integer.parseInt(data_con[1])<=Integer.parseInt(data_Venc[1]) && Integer.parseInt(data_Ini[0])<=Integer.parseInt(data_con[0]) && Integer.parseInt(data_con[0])<=Integer.parseInt(data_Venc[0])){
-                    total += Float.parseFloat(tab2.getTotal());
-               }else{
-                   
-               }
+               
+                      if(Integer.parseInt(data_Ini[2])<=Integer.parseInt(data_con[2]) && Integer.parseInt(data_con[2])<=Integer.parseInt(data_Venc[2]) && Integer.parseInt(data_Ini[1])<Integer.parseInt(data_con[1]) && Integer.parseInt(data_con[1])<Integer.parseInt(data_Venc[1])){
+                          total += Float.parseFloat(tab2.getTotal());
+                      }else if((Integer.parseInt(data_Ini[2])==Integer.parseInt(data_con[2]) && Integer.parseInt(data_Ini[1])==Integer.parseInt(data_con[1]) && Integer.parseInt(data_Ini[0])<=Integer.parseInt(data_con[0]) ) || (Integer.parseInt(data_Venc[2])==Integer.parseInt(data_con[2]) && Integer.parseInt(data_con[1])==Integer.parseInt(data_Venc[1]) && Integer.parseInt(data_Venc[0])>=Integer.parseInt(data_con[0]))){
+                          total += Float.parseFloat(tab2.getTotal());
+                      }
                     
             }
             
@@ -212,6 +216,7 @@ public class Relatorio_Mesa extends javax.swing.JFrame {
              nf.setMaximumFractionDigits(2);
              nf.setMinimumFractionDigits(2);
             Tabela.setValueAt(nf.format(total), i, 1);
+            this.totall += total;
             total = 0;
             i++;
             
@@ -240,6 +245,7 @@ public class Relatorio_Mesa extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
+        jButton5 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
@@ -255,6 +261,16 @@ public class Relatorio_Mesa extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setPreferredSize(new java.awt.Dimension(690, 400));
+
+        jButton5.setBackground(new java.awt.Color(255, 255, 255));
+        jButton5.setFont(new java.awt.Font("Tw Cen MT Condensed", 0, 18)); // NOI18N
+        jButton5.setForeground(new java.awt.Color(255, 102, 0));
+        jButton5.setText("Tela Inicial");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         jLabel2.setBackground(new java.awt.Color(255, 102, 0));
         jLabel2.setFont(new java.awt.Font("Tw Cen MT Condensed", 1, 36)); // NOI18N
@@ -341,6 +357,8 @@ public class Relatorio_Mesa extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton3)
                         .addGap(38, 38, 38))
@@ -379,7 +397,9 @@ public class Relatorio_Mesa extends javax.swing.JFrame {
                             .addComponent(jButton2)
                             .addComponent(jButton4)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton3)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton3)
+                            .addComponent(jButton5))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -433,6 +453,10 @@ public class Relatorio_Mesa extends javax.swing.JFrame {
                   String Valor = (String) Tabela.getValueAt(i, 1);
                   document.add(new Paragraph("Mesa ("+mesa+") vendeu "+Valor));
               }
+              NumberFormat nf = NumberFormat.getCurrencyInstance();// Iniciando formatação
+                nf.setMaximumFractionDigits(2);
+                nf.setMinimumFractionDigits(2);
+              document.add(new Paragraph("Total: "+nf.format(this.totall)));
               
               
               
@@ -449,6 +473,12 @@ public class Relatorio_Mesa extends javax.swing.JFrame {
           document.close();
         
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+        new TelaInicial_Gerente().setVisible(true);
+        dispose();
+    }//GEN-LAST:event_jButton5ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -523,6 +553,7 @@ public class Relatorio_Mesa extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;

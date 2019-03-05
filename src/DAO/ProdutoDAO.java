@@ -221,6 +221,22 @@ public class ProdutoDAO extends ExecuteSQL{
         return null;
     }
     
+    public boolean AlterarEstoque(Produto pro){
+        try {
+            String consulta = "update produto set estoque = '"+pro.getEstoque()+"' where idproduto = '"+pro.getId()+"'";
+            
+            PreparedStatement ps = getCon().prepareStatement(consulta);
+            
+            if(ps.executeUpdate()> 0){
+                return true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ProdutoDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+        return false;
+    }
+    
     public String Deletar(Produto p){
         try {
             String consulta = "delete from produto where idproduto = ?";
